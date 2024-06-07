@@ -1,4 +1,5 @@
 ﻿using Microsoft.SemanticKernel;
+using Speckle.Core.Api;
 using Specklethron.Speckle;
 using System.ComponentModel;
 using Stream = Speckle.Core.Api.Stream;
@@ -51,7 +52,7 @@ namespace Specklethron.Plugins
         }
 
         [KernelFunction, Description("Get user stream")]
-        public async Task<Stream> GetSteram([Description("Stram Id")] string id)
+        public async Task<Stream> GetSteram([Description("Stream Id")] string id)
         {
             try
             {
@@ -62,5 +63,32 @@ namespace Specklethron.Plugins
                 throw new ArgumentException("Couldn't fetch stream");
             }
         }
+
+        [KernelFunction, Description("Get user stream")]
+        public async Task<List<Commit>> GetCommits([Description("Stream Id")] string id)
+        {
+            try
+            {
+                return await SpeckleConnector.GetCommits(id);
+            }
+            catch
+            {
+                throw new ArgumentException("Couldn't fetch stream");
+            }
+        }
+
+        [KernelFunction, Description("Get obects form stream and commit")]
+        public async Task<Object> GetObject([Description("Stream Id")] string stream, [Description("Commit Id")] string commit)
+        {
+            try
+            {
+                return await SpeckleConnector.FetchCommitData(stream, commit);
+            }
+            catch
+            {
+                throw new ArgumentException("Couldn't fetch objects from commit");
+            }
+        }
+
     }
 }
