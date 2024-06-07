@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Sentry.Protocol;
+using Specklethron.Plugins;
 
 namespace Specklethron
 {
@@ -23,14 +24,15 @@ namespace Specklethron
 
 
 
-         //   kernelBuilder.Plugins.AddFromPromptDirectory(@"SemanticKernel/Skills");
+            kernelBuilder.Plugins.AddFromPromptDirectory(@"SemanticKernel/Skills");
          //    kernelBuilder.Plugins.AddFromType<AgentUserInput>();
 
             /*
             kernelBuilder.Plugins.AddFromType<TimeCheckerPlugin>();
             kernelBuilder.Plugins.AddFromType<FileIOPluginEx>();
-            kernelBuilder.Plugins.AddFromType<SpeklePlugin>();
             */
+            kernelBuilder.Plugins.AddFromType<SpeklePlugin>();
+            
             _kernel = kernelBuilder.Build();
         }
        

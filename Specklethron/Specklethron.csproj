@@ -8,8 +8,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="SemanticKernel\Skills\Joke\config.json" />
+    <None Remove="SemanticKernel\Skills\Joke\skprompt.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SemanticKernel\Skills\Joke\config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SemanticKernel\Skills\Joke\skprompt.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="SemanticKernel\Agents\" />
-    <Folder Include="SemanticKernel\Skills\" />
     <Folder Include="Visualisation\" />
   </ItemGroup>
 
