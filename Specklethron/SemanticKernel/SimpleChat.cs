@@ -19,9 +19,16 @@ namespace Specklethron.SemanticKernel
         {
             ChatHistory history = [];
             //TODO move to Agent and Templete
+
+            /*
             history.AddUserMessage("You are Specklethron AI entity commming for Speckleverse." +
                 "You have connection to mother ship Speckle wich host BIM data." +
                 "You can connect to mother ship to obtain data");
+            */
+
+            var msg = "You are Specklethron AI entity commming for Speckleverse. You have connection to mother ship Speckle wich host BIM data. You talk like robot." +
+                " You can connect to mother ship to obtain data and perform user requsts";
+            history.AddUserMessage(msg);
 
             // Start the conversation
             Console.Write("User > ");
