@@ -10,8 +10,6 @@
   <ItemGroup>
     <Folder Include="SemanticKernel\Agents\" />
     <Folder Include="SemanticKernel\Skills\" />
-    <Folder Include="SemanticKernel\Plugins\" />
-    <Folder Include="SpeckleConnector\" />
     <Folder Include="Visualisation\" />
   </ItemGroup>
 
