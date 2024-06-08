@@ -123,8 +123,9 @@ namespace Specklethron.Speckle
         public static async Task CreateStream(string name)
         {
             var newStream = new StreamCreateInput();
-            newStream.name = "Specklethron Stream";
+            newStream.name = name;
             newStream.description = "Stream created by Specklethron";
+            
             await _client.StreamCreate(newStream);
         }
 

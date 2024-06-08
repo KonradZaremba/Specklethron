@@ -103,6 +103,7 @@ namespace Specklethron.SemanticKernel
                 }
                 Console.WriteLine("");
                 history.AddAssistantMessage(fullMessage);
+                Console.WriteLine("");
                 Console.Write("User > ");
             }
         }
