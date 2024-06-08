@@ -1,7 +1,10 @@
 ﻿using Microsoft.SemanticKernel;
 using Speckle.Core.Api;
+using Speckle.Core.Api.SubscriptionModels;
+using Speckle.Core.Models;
 using Specklethron.Speckle;
 using System.ComponentModel;
+using System.Net;
 using Stream = Speckle.Core.Api.Stream;
 
 
@@ -82,13 +85,42 @@ namespace Specklethron.Plugins
         {
             try
             {
-                return await SpeckleConnector.FetchCommitData(stream, commit);
+                return await SpeckleConnector.FetchCommitObjectData(stream, commit);
             }
             catch
             {
                 throw new ArgumentException("Couldn't fetch objects from commit");
             }
         }
+        [KernelFunction, Description("Get all objects form and commit")]
+        public async Task<Object> GetAllObjects([Description("Stream Id")] string stream, [Description("Commit Object")] Base commitObject)
+        {
+            try
+            {
+                return await SpeckleConnector.FetchAllObjectsInCommit(stream, commitObject);
+            }
+            catch
+            {
+                throw new ArgumentException("Couldn't fetch objects from commit");
+            }
+        }
+
+        [KernelFunction, Description("Get planed functionalities for Specklethron")]
+        public async Task<List<string>> GetPlannedFunctionalities()
+        {
+            return new List<string>()
+            {
+                "spekle viewport",
+                "lodading pdf",
+                "loading dwg",
+                "compare commits",
+                "add gometry to stream",
+                "add data to objects",
+                "open app with spekle connector"
+            };
+        }
+
+        //TODO Get Commit Object
 
     }
 }

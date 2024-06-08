@@ -17,9 +17,10 @@ namespace Specklethron
         {
             ILoggerFactory myLoggerFactory = NullLoggerFactory.Instance;
 
+            var env = dotenv.net.DotEnv.Read();
+            
             var kernelBuilder = Kernel.CreateBuilder()
-                //TODO -> api key from  secrete
-                 .AddOpenAIChatCompletion("gpt-4-vision-preview", "sk-proj-5ko37rX0q0zNjat4WEI7T3BlbkFJgJqZgWdaCY4IFdGkYEhE");
+                 .AddOpenAIChatCompletion("gpt-4-vision-preview", env["OPENAI_API_KEY"]);
                 //.AddOpenAIChatCompletion("gpt-3.5-turbo", "sk-proj-5ko37rX0q0zNjat4WEI7T3BlbkFJgJqZgWdaCY4IFdGkYEhE");
 
 

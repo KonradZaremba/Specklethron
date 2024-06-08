@@ -1,6 +1,8 @@
 ﻿using Speckle.Core.Api;
 using Speckle.Core.Credentials;
 using Speckle.Core.Models;
+using Speckle.Core.Models.GraphTraversal;
+using System;
 using Stream = Speckle.Core.Api.Stream;
 
 namespace Specklethron.Speckle
@@ -45,11 +47,38 @@ namespace Specklethron.Speckle
             return await _client.StreamGetCommits(id);
         }
 
-        public static async Task<SpeckleObject> FetchCommitData(string streamId, string commitId)
+        public static async Task<SpeckleObject> FetchCommitObjectData(string streamId, string commitId)
         {
             var commit = await _client.CommitGet(streamId, commitId);
             var data = await _client.ObjectGet(streamId, commit.referencedObject);
             return data;
+        }
+
+        public static async Task<List<Base>> FetchAllObjectsInCommit(string streamId, Base commitObject)
+        {
+            var traversalFunc = DefaultTraversal.CreateTraversalFunc();
+            var objects =  await Task.Run(() => traversalFunc.Traverse(commitObject)
+                .Select(c => c.Current)
+                .ToList());
+            return objects;
+        }
+
+        public static async Task<SpeckleObject> GetObjectCountInCommit(string streamId, string commitId)
+        {
+            var commit = await _client.CommitGet(streamId, commitId);
+            var data = await _client.ObjectCountGet(streamId, commit.referencedObject);
+            return data;
+        }
+        public static async Task<SpeckleObject> GetObjects(string streamId, string commitId)
+        {
+            var commit = await _client.CommitGet(streamId, commitId);
+            var count = await _client.ObjectCountGet(streamId, commit.referencedObject);
+            
+            for ( var i = 0; i<count.totalChildrenCount; i++)
+            {
+
+            }
+            return null;
         }
 
         static Dictionary<string, int> CalculateCategoryCounts(Base data)

@@ -2,6 +2,7 @@
 using Speckle.Core.Logging;
 using Specklethron;
 using Specklethron.SemanticKernel;
+using dotenv.net;
 
 internal class Program
 {
@@ -13,8 +14,12 @@ internal class Program
         Console.ForegroundColor = ConsoleColor.Green;
         Console.Title = "Chat";
 
+        DotEnv.Load();
+
         var specklethron = new Specklethron.Specklethron();
         var chat = new SimpleChat(specklethron._kernel);
+
+        
 
         await chat.LetsChat();
     }
