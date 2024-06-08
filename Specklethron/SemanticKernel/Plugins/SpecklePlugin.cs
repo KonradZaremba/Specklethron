@@ -1,4 +1,5 @@
 ﻿using Microsoft.SemanticKernel;
+using Sentry;
 using Speckle.Core.Api;
 using Speckle.Core.Api.SubscriptionModels;
 using Speckle.Core.Models;
@@ -93,11 +94,11 @@ namespace Specklethron.Plugins
             }
         }
         [KernelFunction, Description("Get all objects form and commit")]
-        public async Task<Object> GetAllObjects([Description("Commit Object")] Base commitObject)
+        public async Task<Object> GetAllObjects([Description("Stream Id")] string streamId, [Description("Commit Id")] string commitId)
         {
             try
             {
-                return await SpeckleConnector.FetchAllObjectsInCommit(commitObject);
+                return await SpeckleConnector.FetchAllObjectsInCommit(streamId, commitId);
             }
             catch
             {
@@ -106,18 +107,19 @@ namespace Specklethron.Plugins
         }
 
         [KernelFunction, Description("Get all categories form and commit")]
-        public async Task<Dictionary<string, int>> GetAllCategories([Description("Commit Object")] Base commitObject)
+        public async Task<Dictionary<string, object>> GetAllCategories([Description("Stream Id")] string streamId, [Description("Commit Id")] string commitId)
         {
             try
             {
-                return await Task.Run(()=> SpeckleConnector.CalculateCategoryCounts(commitObject));
+                return await Task.Run(()=> SpeckleConnector.CalculateCategoryCounts(streamId, commitId));
             }
             catch
             {
                 throw new ArgumentException("Couldn't fetch categories from commit");
             }
         }
-
+        /*
+         //Object too big to pass throu llm -> need to use fetch in functions
         [KernelFunction, Description("Get commti object can be travesed")]
         public async Task<Base> GetCommitObject([Description("Stream Id")] string streamId, [Description("Commit Id")] string commitId)
         {
@@ -130,7 +132,7 @@ namespace Specklethron.Plugins
                 throw new ArgumentException("Couldn't fetch categories from commit");
             }
         }
-
+        */
         [KernelFunction, Description("Get planed functionalities for Specklethron")]
         public async Task<List<string>> GetPlannedFunctionalities()
         {

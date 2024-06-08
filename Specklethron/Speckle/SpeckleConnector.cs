@@ -64,7 +64,7 @@ namespace Specklethron.Speckle
         }
 
 
-        public static async Task<Base> FetchCommitObject(string streamId, string commitId)
+        private static async Task<Base> FetchCommitObject(string streamId, string commitId)
         {
             var commit = await _client.CommitGet(streamId, commitId).ConfigureAwait(false);
             using ServerTransport transport = new(_client.Account, streamId);
@@ -78,50 +78,40 @@ namespace Specklethron.Speckle
             return commitObject;
         }
 
-        public static async Task<List<Base>> FetchAllObjectsInCommit(Base commitObject)
+        public static async Task<List<Base>> FetchAllObjectsInCommit(string streamId, string commitId)
         {
+            var commitData = await FetchCommitObject(streamId, commitId);
             var traversalFunc = DefaultTraversal.CreateTraversalFunc();
-            var trav = traversalFunc.Traverse(commitObject);
 
-           return await Task.Run(() => traversalFunc.Traverse(commitObject)
+           return await Task.Run(() => traversalFunc.Traverse(commitData)
                 .Select(c => c.Current)
                 .ToList());
         }
 
         public static async Task<SpeckleObject> GetObjectCountInCommit(string streamId, string commitId)
         {
+
             var commit = await _client.CommitGet(streamId, commitId);
             var data = await _client.ObjectCountGet(streamId, commit.referencedObject);
             return data;
         }
 
-        public async static Task<Dictionary<string, int>> CalculateCategoryCounts(Base commitObject)
+        public async static Task<Dictionary<string, object>> CalculateCategoryCounts(string streamId, string commitId)
         {
-            var categoryCounts = new Dictionary<string, int>();
+            var categoryCounts = new Dictionary<string, object>();
 
-            var traversalFunc = DefaultTraversal.CreateTraversalFunc();
-            var traversal = traversalFunc.Traverse(commitObject);
+            var commitObject = await FetchCommitObject(streamId, commitId);
 
-            await Task.Run(() =>
+            var members = commitObject.GetMembers();
+
+            foreach(var m in members)
             {
-                foreach (var item in traversal)
+                var val = m.Value as List<object>;
+                if (val != null)
                 {
-                    var obj = item.Current;
-                    if (obj["category"] != null)
-                    {
-                        var category = obj["category"].ToString();
-                        if (categoryCounts.ContainsKey(category))
-                        {
-                            categoryCounts[category]++;
-                        }
-                        else
-                        {
-                            categoryCounts[category] = 1;
-                        }
-                    }
+                    categoryCounts.Add(m.Key, val.Count());
                 }
-            });
-
+            }
             return categoryCounts;
         }
     }
