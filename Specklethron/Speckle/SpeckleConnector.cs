@@ -120,6 +120,13 @@ namespace Specklethron.Speckle
             return categoryCounts;
         }
 
+        public static async Task CreateStream(string name)
+        {
+            var newStream = new StreamCreateInput();
+            newStream.name = "Specklethron Stream";
+            newStream.description = "Stream created by Specklethron";
+            await _client.StreamCreate(newStream);
+        }
 
         public static async Task SendGeometry(string streamId)
         {
@@ -166,7 +173,7 @@ namespace Specklethron.Speckle
             lines.Add(new Line(new Point(0, 10, 0), new Point(10, 10, 0)));
             lines.Add(new Line(new Point(10, 10, 0), new Point(10, 20, 0)));
             lines.Add(new Line(new Point(0, 20, 0), new Point(0, 30, 0)));
-            lines.Add(new Line(new Point(0, 30, 0), new Point(10, 20, 0)));
+            lines.Add(new Line(new Point(0, 20, 0), new Point(10, 20, 0)));
             lines.Add(new Line(new Point(0, 30, 0), new Point(10, 30, 0)));
 
             // P
@@ -203,7 +210,7 @@ namespace Specklethron.Speckle
 
             // T
             lines.Add(new Line(new Point(140, 30, 0), new Point(150, 30, 0)));
-            lines.Add(new Line(new Point(145, 10, 0), new Point(155, 30, 0)));
+            lines.Add(new Line(new Point(145, 10, 0), new Point(145, 30, 0)));
 
             // H
             lines.Add(new Line(new Point(160, 10, 0), new Point(160, 30, 0)));
@@ -215,7 +222,7 @@ namespace Specklethron.Speckle
             lines.Add(new Line(new Point(180, 30, 0), new Point(190, 30, 0)));
             lines.Add(new Line(new Point(190, 30, 0), new Point(190, 20, 0)));
             lines.Add(new Line(new Point(190, 20, 0), new Point(180, 20, 0)));
-            lines.Add(new Line(new Point(170, 20, 0), new Point(190, 10, 0)));
+            lines.Add(new Line(new Point(180, 20, 0), new Point(190, 10, 0)));
 
             // O
             lines.Add(new Line(new Point(200, 10, 0), new Point(200, 30, 0)));

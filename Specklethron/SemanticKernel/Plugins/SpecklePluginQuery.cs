@@ -13,6 +13,7 @@ namespace Specklethron.Plugins
 {
     public class SpeklePlugin
     {
+        //TODO test multi return instead of throw
 
         [KernelFunction, Description("Check accounts you can login, give user names")]
         public async Task<List<string>> GetUsers()
@@ -134,17 +135,31 @@ namespace Specklethron.Plugins
         }
         */
 
-        [KernelFunction, Description("Generates and sends commit")]
-        public async Task SendObject([Description("Stream Id")] string streamId)
+        [KernelFunction, Description("Adds sends commit to sream")]
+        public async Task<string> SendObject([Description("Stream Id")] string streamId)
         {
             try
             {
                 await Task.Run(() => SpeckleConnector.SendGeometry(streamId));
-                return;
+                return "Added succesfully";
             }
             catch
             {
                 throw new ArgumentException("Couldn't send commit");
+            }
+        }
+
+        [KernelFunction, Description("Create stream")]
+        public async Task<string> CreateStream([Description("Stream Name")] string streamName)
+        {
+            try
+            {
+                await Task.Run(() => SpeckleConnector.CreateStream(streamName));
+                return "Stream created succesfully";
+            }
+            catch
+            {
+                throw new ArgumentException("Couldn't create stream");
             }
         }
 
