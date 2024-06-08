@@ -1,7 +1,8 @@
 # Specklethron
 
 Specklethron is a highly advanced AI entity originating from Speckleverse, designed for efficient data search and retrieval. Thanks to its connection to the mother starship "Speckle," it can access your Building Information Modeling (BIM) data seamlessly. Specklethron can connect to your Speckle account and browse streams through a simple CLI interface, familiar to every hackathon enthusiast. Occasionally, it motivates developers to add some missing planned functionalities, enhancing the overall experience and capabilities of the system.
-![Speklethron_basic](https://github.com/KonradZaremba/Specklethron/assets/18317435/85cae690-56ae-4a7d-b088-efb401749063)
+
+![Speklethron_basic_countelements](https://github.com/KonradZaremba/Specklethron/assets/18317435/3c51d56b-ff61-4963-8e63-5f7f9fe6a8a1)
 
 
 <b>Features</b>:
