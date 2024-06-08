@@ -93,15 +93,41 @@ namespace Specklethron.Plugins
             }
         }
         [KernelFunction, Description("Get all objects form and commit")]
-        public async Task<Object> GetAllObjects([Description("Stream Id")] string stream, [Description("Commit Object")] Base commitObject)
+        public async Task<Object> GetAllObjects([Description("Commit Object")] Base commitObject)
         {
             try
             {
-                return await SpeckleConnector.FetchAllObjectsInCommit(stream, commitObject);
+                return await SpeckleConnector.FetchAllObjectsInCommit(commitObject);
             }
             catch
             {
                 throw new ArgumentException("Couldn't fetch objects from commit");
+            }
+        }
+
+        [KernelFunction, Description("Get all categories form and commit")]
+        public async Task<Dictionary<string, int>> GetAllCategories([Description("Commit Object")] Base commitObject)
+        {
+            try
+            {
+                return await Task.Run(()=> SpeckleConnector.CalculateCategoryCounts(commitObject));
+            }
+            catch
+            {
+                throw new ArgumentException("Couldn't fetch categories from commit");
+            }
+        }
+
+        [KernelFunction, Description("Get commti object can be travesed")]
+        public async Task<Base> GetCommitObject([Description("Stream Id")] string streamId, [Description("Commit Id")] string commitId)
+        {
+            try
+            {
+                return await Task.Run(() => SpeckleConnector.FetchCommitObject(streamId, commitId));
+            }
+            catch
+            {
+                throw new ArgumentException("Couldn't fetch categories from commit");
             }
         }
 

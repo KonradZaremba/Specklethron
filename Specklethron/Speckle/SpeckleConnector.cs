@@ -1,8 +1,11 @@
 ﻿using Speckle.Core.Api;
 using Speckle.Core.Credentials;
 using Speckle.Core.Models;
+using Speckle.Core.Models.Extensions;
 using Speckle.Core.Models.GraphTraversal;
+using Speckle.Core.Transports;
 using System;
+using System.Threading;
 using Stream = Speckle.Core.Api.Stream;
 
 namespace Specklethron.Speckle
@@ -46,6 +49,12 @@ namespace Specklethron.Speckle
             if (_client is null) throw new ArgumentException("you need to login first");
             return await _client.StreamGetCommits(id);
         }
+        public async static Task<List<Commit>> GetCommit(string id, string commitId)
+        {
+
+            if (_client is null) throw new ArgumentException("you need to login first");
+            return await _client.StreamGetCommits(id);
+        }
 
         public static async Task<SpeckleObject> FetchCommitObjectData(string streamId, string commitId)
         {
@@ -54,13 +63,29 @@ namespace Specklethron.Speckle
             return data;
         }
 
-        public static async Task<List<Base>> FetchAllObjectsInCommit(string streamId, Base commitObject)
+
+        public static async Task<Base> FetchCommitObject(string streamId, string commitId)
+        {
+            var commit = await _client.CommitGet(streamId, commitId).ConfigureAwait(false);
+            using ServerTransport transport = new(_client.Account, streamId);
+
+            Base commitObject = await Operations
+              .Receive(
+                commit.referencedObject,
+                transport
+              )
+              .ConfigureAwait(false);
+            return commitObject;
+        }
+
+        public static async Task<List<Base>> FetchAllObjectsInCommit(Base commitObject)
         {
             var traversalFunc = DefaultTraversal.CreateTraversalFunc();
-            var objects =  await Task.Run(() => traversalFunc.Traverse(commitObject)
+            var trav = traversalFunc.Traverse(commitObject);
+
+           return await Task.Run(() => traversalFunc.Traverse(commitObject)
                 .Select(c => c.Current)
                 .ToList());
-            return objects;
         }
 
         public static async Task<SpeckleObject> GetObjectCountInCommit(string streamId, string commitId)
@@ -69,41 +94,19 @@ namespace Specklethron.Speckle
             var data = await _client.ObjectCountGet(streamId, commit.referencedObject);
             return data;
         }
-        public static async Task<SpeckleObject> GetObjects(string streamId, string commitId)
-        {
-            var commit = await _client.CommitGet(streamId, commitId);
-            var count = await _client.ObjectCountGet(streamId, commit.referencedObject);
-            
-            for ( var i = 0; i<count.totalChildrenCount; i++)
-            {
 
-            }
-            return null;
-        }
-
-        static Dictionary<string, int> CalculateCategoryCounts(Base data)
+        public async static Task<Dictionary<string, int>> CalculateCategoryCounts(Base commitObject)
         {
             var categoryCounts = new Dictionary<string, int>();
 
-            void Traverse(Base obj)
+            var traversalFunc = DefaultTraversal.CreateTraversalFunc();
+            var traversal = traversalFunc.Traverse(commitObject);
+
+            await Task.Run(() =>
             {
-                if (obj == null) return;
-
-                foreach (var prop in obj.GetDynamicMembers())
+                foreach (var item in traversal)
                 {
-                    var value = obj[prop];
-                    if (value is Base nestedObj)
-                    {
-                        Traverse(nestedObj);
-                    }
-                    else if (value is IEnumerable<Base> baseCollection)
-                    {
-                        foreach (var item in baseCollection)
-                        {
-                            Traverse(item);
-                        }
-                    }
-
+                    var obj = item.Current;
                     if (obj["category"] != null)
                     {
                         var category = obj["category"].ToString();
@@ -117,10 +120,9 @@ namespace Specklethron.Speckle
                         }
                     }
                 }
-            }
-            Traverse(data);
+            });
+
             return categoryCounts;
         }
-
     }
 }
