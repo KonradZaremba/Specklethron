@@ -17,6 +17,7 @@ internal class Program
         DotEnv.Load();
 
         var specklethron = new Specklethron.Specklethron();
+
         var chat = new SimpleChat(specklethron._kernel);
 
         

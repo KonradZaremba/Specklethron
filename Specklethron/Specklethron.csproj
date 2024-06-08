@@ -30,6 +30,7 @@
     <PackageReference Include="dotenv.net" Version="3.1.3" />
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.14.1" />
     <PackageReference Include="Speckle.Core" Version="2.19.2" />
+    <PackageReference Include="Speckle.Objects" Version="2.19.2" />
   </ItemGroup>
 
   <ItemGroup>

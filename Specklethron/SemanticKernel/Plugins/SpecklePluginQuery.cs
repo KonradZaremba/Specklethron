@@ -133,6 +133,21 @@ namespace Specklethron.Plugins
             }
         }
         */
+
+        [KernelFunction, Description("Generates and sends commit")]
+        public async Task SendObject([Description("Stream Id")] string streamId)
+        {
+            try
+            {
+                await Task.Run(() => SpeckleConnector.SendGeometry(streamId));
+                return;
+            }
+            catch
+            {
+                throw new ArgumentException("Couldn't send commit");
+            }
+        }
+
         [KernelFunction, Description("Get planed functionalities for Specklethron")]
         public async Task<List<string>> GetPlannedFunctionalities()
         {
